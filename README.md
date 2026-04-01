@@ -40,7 +40,11 @@ docs/
 | WS2812b 24-LED NeoPixel ring | 1 | Outer crystal — AliExpress or Adafruit |
 | WS2812b 7-LED NeoPixel component | 1 | Center crystal — AliExpress |
 | 22–24 AWG stranded wire | short lengths | Pre-soldered directly |
-| M3×20mm screws | 3 | Holds shell together |
+| M3×20mm screws | 3 | Main shell assembly |
+| M3×12mm screws | 3 | Crystal enclosure (`main_crystal_enclosure.stl`) |
+| M2×5mm self-tapping screws | 2 | Secures 7-LED jewel in `main_crystal_bottom.stl` |
+
+> **Drill note:** Due to print scaling, screw holes may need to be bored out with a **7/64" drill bit** before M3 screws will fit cleanly.
 
 **Estimated cost per kit: ~$9–14** (3D print filament not included)
 
