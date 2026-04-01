@@ -168,9 +168,12 @@ After flashing, unplug and reconnect to a USB-C power source — the animation s
 | Libraries | `import board`, `import neopixel`, `import math` |
 | Variables / constants | `BRIGHTNESS`, `SLEEP_MS`, `SWEEP_RATE`, … |
 | Objects | `neopixel.NeoPixel(...)`, `auto_write=False` |
+| Functions | `def arc_reactor(pixels, t):` |
+| Swappable behavior | `animate = arc_reactor` → `animate = rainbow_chase` |
 | Sine wave / math | `(math.sin(t * OUTER_SPEED + i * PHASE_STEP) + 1) / 2` |
 | Loops + modulo | `CENTER_COUNT + int(t * SWEEP_RATE) % OUTER_COUNT` |
 | RGB color mixing | `(r, g, b)` tuples, values 0–255 |
+| Color wheel helper | `colorwheel(pos)` — maps 0–255 to a rainbow color |
 | Two independent zones | `range(CENTER_COUNT)` vs `range(CENTER_COUNT, NUM_PIXELS)` |
 | Frame buffering | `pixels.show()` called once per frame |
 | Frame pacing | `time.sleep(SLEEP_MS / 1000)` |

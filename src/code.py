@@ -24,10 +24,13 @@ pixels = neopixel.NeoPixel(
     PIXEL_PIN, NUM_PIXELS,
     brightness=BRIGHTNESS, auto_write=False)
 
-t = 0.0  # time counter; grows by one frame each loop
 
-# Main loop: runs forever - this IS the animation.
-while True:
+# Function: one frame of the arc reactor animation.
+# pixels = the LED strip object  |  t = current time in seconds
+# To swap animations, write a function with the same signature:
+#   def my_animation(pixels, t): ...
+# then change: animate = my_animation
+def arc_reactor(pixels, t):
 
     # Leading pixel index, stepping around the ring each frame.
     sweep = CENTER_COUNT + int(t * SWEEP_RATE) % OUTER_COUNT
@@ -51,6 +54,44 @@ while True:
     for i in range(CENTER_COUNT):
         pixels[i] = (cr, cg, 255)  # all 7 center pixels same color
 
-    pixels.show()             # send the full buffer to LEDs at once
-    t += SLEEP_MS / 1000      # advance the time counter one frame
+
+# Helper: converts a 0-255 position into an (r, g, b) rainbow color.
+# Imagine a color wheel — 0=red, 85=green, 170=blue, 255=back to red.
+# No extra libraries needed; pure math using only multiplication.
+def colorwheel(pos):
+    pos = pos % 256
+    if pos < 85:
+        return (255 - pos * 3, pos * 3, 0)       # red → green
+    if pos < 170:
+        pos -= 85
+        return (0, 255 - pos * 3, pos * 3)        # green → blue
+    pos -= 170
+    return (pos * 3, 0, 255 - pos * 3)            # blue → red
+
+
+# Function: one frame of a rainbow chase animation.
+# Every pixel gets a different hue; the whole rainbow shifts each
+# frame so it appears to chase around the strip.
+def rainbow_chase(pixels, t):
+
+    # offset moves the rainbow forward a little each frame.
+    offset = int(t * 50) % 256
+
+    for i in range(NUM_PIXELS):
+        # Space hues evenly around the wheel, then shift by offset.
+        hue = (offset + i * 256 // NUM_PIXELS) % 256
+        pixels[i] = colorwheel(hue)
+
+
+# Swap this line to use a different animation function.
+# Try: animate = rainbow_chase
+animate = arc_reactor
+
+t = 0.0  # time counter; grows by one frame each loop
+
+# Main loop: runs forever - this IS the animation.
+while True:
+    animate(pixels, t)           # fill the pixel buffer for this frame
+    pixels.show()                # send the full buffer to LEDs at once
+    t += SLEEP_MS / 1000         # advance the time counter one frame
     time.sleep(SLEEP_MS / 1000)  # /1000 converts ms to seconds
