@@ -1,0 +1,42 @@
+# CircuitPython library bundle — ignore everything except neopixel.mpy
+bundle/
+!bundle/adafruit-circuitpython-bundle-10.x-mpy-20260401/lib/neopixel.mpy
+
+# CircuitPython firmware binary — large, download separately
+bin/
+
+# Temporary flash image
+/tmp/cw3d_user_fs.bin
+
+# Internal planning docs
+docs/CrashWorks3D_CompassSchool_Panel.md
+docs/bmm-workflow-status.yaml
+docs/product-brief-*.md
+docs/sprint-plan-*.md
+docs/tech-spec-*.md
+docs/stories/
+
+# BMAD methodology files
+.bmad/
+_bmad/
+_bmad-output/
+bmad/
+
+# lib placeholder doc (deployment handled by flash.sh)
+lib/README.md
+
+# Local logs
+firebase-debug.log
+firmware-log.md
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Editor
+.vscode/
+*.swp
