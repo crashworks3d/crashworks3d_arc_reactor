@@ -6,6 +6,8 @@ Created by [Crash Works 3D](https://crashworks3d.com) for a hands-on panel at [C
 
 Students snap together a pre-printed shell, seat the pre-wired NeoPixel rings, fasten three screws, and plug in USB-C. The reactor glows. Then they learn why.
 
+<img src="images/cw3d_arc_reactor.jpg" alt="CW3D Arc Reactor" width="400">
+
 ---
 
 ## What's in This Repo
