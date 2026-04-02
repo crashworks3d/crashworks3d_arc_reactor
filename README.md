@@ -18,7 +18,8 @@ src/
   blink_test.py       Quick single-pixel sanity check
 
 scripts/
-  flash.sh            One-command firmware + filesystem flash tool
+  flash.sh            One-command flash tool (macOS/Linux — bash)
+  flash.py            One-command flash tool (macOS/Linux/Windows — Python)
 
 stl/
   crystal_ring.stl          Outer diffuser — seats 24-LED NeoPixel ring
@@ -147,8 +148,8 @@ Target outer diameter: **~65mm** to seat the 24-LED ring.
 
 ### Requirements
 
-- [esptool.py](https://github.com/espressif/esptool) (`pip install esptool`)
-- Python 3.11+
+- Python 3.8+
+- [esptool](https://github.com/espressif/esptool) — `pip install esptool`
 
 ### Step 1 — Download the CircuitPython firmware
 
@@ -165,9 +166,25 @@ bin/adafruit-circuitpython-makergo_esp32c3_supermini-en_US-10.1.4.bin
 
 ### Step 2 — Flash
 
+Two flash scripts are provided. Both do the same thing — choose based on your OS:
+
+**macOS / Linux** (bash):
 ```bash
-bash scripts/flash.sh [/dev/cu.usbmodem14301]
+bash scripts/flash.sh [port]
 ```
+
+**macOS / Linux / Windows** (Python):
+```bash
+python scripts/flash.py [port]
+```
+
+Default ports if none is specified:
+
+| OS | Default port |
+|---|---|
+| macOS | `/dev/cu.usbmodem14301` |
+| Linux | `/dev/ttyUSB0` |
+| Windows | `COM3` |
 
 The script will prompt you to put the board in download mode (BOOT + RESET), then:
 
