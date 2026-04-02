@@ -4,7 +4,7 @@
 
 Created by [Crash Works 3D](https://crashworks3d.com) for a hands-on panel at [Compass Community Collaborative School](https://compassfortcollins.org/) — a project-based learning school in Fort Collins, CO serving grades 6–12.
 
-Students snap together a pre-printed shell, seat the pre-wired NeoPixel rings, fasten three screws, and plug in USB-C. The reactor glows. Then they learn why.
+Students assemble a pre-printed shell, seat the pre-wired NeoPixel rings, fasten three screws, and plug in USB-C. The reactor glows. Then they learn why.
 
 <img src="images/cw3d_arc_reactor.jpg" alt="CW3D Arc Reactor" width="400">
 
@@ -99,6 +99,33 @@ graph LR
 Pixel indices: 0–6 = center cluster, 7–30 = outer ring (31 total).
 
 > **Why GPIO2?** Avoids the GPIO8 conflict on some ESP32-C3 variants and is safe for RMT-based NeoPixel signaling.
+
+### Electronics Concepts
+
+**Microcontroller — ESP32-C3 SuperMini**
+A microcontroller is a tiny computer on a single chip. Unlike a laptop, it runs one program (`code.py`) on an endless loop. The ESP32-C3 has GPIO (General Purpose Input/Output) pins you control directly from code — GPIO2 is the pin that sends the LED data signal.
+
+**Addressable LEDs — WS2812b**
+Each LED in this project is a WS2812b: a standard RGB LED with a tiny controller chip built inside the package. The chip understands a single-wire serial protocol — the microcontroller sends a stream of bits, each LED reads exactly 24 bits (8 bits each for red, green, blue), then passes the rest of the stream down to the next LED. One wire from GPIO2 controls all 31 pixels.
+
+**Power — VCC and GND**
+Every circuit needs two power connections: VCC (positive, 5V here from USB-C) and GND (ground, 0V). All components share a single power rail and common ground. The `BRIGHTNESS = 0.35` cap in code keeps current draw safe for a standard USB port.
+
+**The Daisy Chain**
+The 7-LED center and 24-LED ring are wired in series on the data line. The first LED reads its 24-bit color instruction and forwards the rest of the stream to the next, all the way down the chain. Each full animation frame sends 31 × 24 = 744 bits.
+
+### What This Circuit Teaches
+
+| Concept | Component | Learning Moment |
+|---|---|---|
+| Microcontrollers | ESP32-C3 SuperMini | A single chip that runs your code — no OS, no distractions |
+| GPIO pins | GPIO2 → LED DATA IN | Code talks to the physical world through numbered pins |
+| Power rails | VCC (5V) + GND | Every circuit needs + and − power connections |
+| Voltage | USB-C → 5V | Electricity has "pressure" — USB delivers a safe, standard 5V |
+| Addressable LEDs | WS2812b | Each LED has its own controller chip — 24 bits sets RGB color |
+| Serial data protocol | Single wire, 744 bits/frame | One wire with clever timing controls all 31 LEDs |
+| Daisy chaining | DATA OUT → DATA IN | LEDs pass data down the line like a telephone game |
+| Current limiting | `BRIGHTNESS = 0.35` | More pixels + brighter = more current; cap protects the USB port |
 
 ---
 
