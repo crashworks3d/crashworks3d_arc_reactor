@@ -1,6 +1,6 @@
 # CW3D Arc Reactor
 
-**Iron Man–inspired NeoPixel arc reactor badge built on an ESP32-C3 SuperMini running CircuitPython.**
+**Iron Man–inspired NeoPixel arc reactor built on an ESP32-C3 SuperMini running CircuitPython.**
 
 Created by [Crash Works 3D](https://crashworks3d.com) for a hands-on panel at [Compass Community Collaborative School](https://compassfortcollins.org/) — a project-based learning school in Fort Collins, CO serving grades 6–12.
 
