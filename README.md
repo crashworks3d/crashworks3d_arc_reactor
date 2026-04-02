@@ -173,7 +173,12 @@ Two flash scripts are provided. Both do the same thing — choose based on your 
 bash scripts/flash.sh [port]
 ```
 
-**macOS / Linux / Windows** (Python):
+**macOS / Linux** (Python):
+```bash
+python3 scripts/flash.py [port]
+```
+
+**Windows** (Python):
 ```bash
 python scripts/flash.py [port]
 ```

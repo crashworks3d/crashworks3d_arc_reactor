@@ -4,7 +4,8 @@ flash.py -- Cross-platform flash tool for CW3D Arc Reactor
 Works on macOS, Linux, and Windows (no bash required).
 
 Usage:
-    python scripts/flash.py [port]
+    macOS/Linux:  python3 scripts/flash.py [port]
+    Windows:      python  scripts/flash.py [port]
 
 Default ports:
     macOS:   /dev/cu.usbmodem14301
@@ -17,6 +18,7 @@ Requirements:
 
 import math
 import os
+import shutil
 import struct
 import subprocess
 import sys
@@ -50,10 +52,20 @@ def default_port():
         return '/dev/ttyUSB0'
 
 
+def find_esptool():
+    """Locate esptool: prefer PATH command, fall back to python -m esptool."""
+    for cmd in ('esptool', 'esptool.py'):
+        if shutil.which(cmd):
+            return [cmd]
+    return [sys.executable, '-m', 'esptool']
+
+
+ESPTOOL = find_esptool()
+
+
 def esptool_cmd(port, *args):
-    """Build an esptool command using the current Python interpreter."""
-    return [sys.executable, '-m', 'esptool',
-            '--chip', CHIP, '--port', port, '--baud', BAUD] + list(args)
+    """Build an esptool command with chip/port/baud pre-filled."""
+    return ESPTOOL + ['--chip', CHIP, '--port', port, '--baud', BAUD] + list(args)
 
 
 def run(cmd, label):
@@ -193,8 +205,9 @@ def main():
     port = sys.argv[1] if len(sys.argv) > 1 else default_port()
 
     print('CW3D Arc Reactor -- Cross-Platform Flash Tool')
-    print(f'Port:  {port}')
-    print(f'Image: {os.path.basename(BIN)}')
+    print(f'Port:    {port}')
+    print(f'Image:   {os.path.basename(BIN)}')
+    print(f'esptool: {" ".join(ESPTOOL)}')
     print()
 
     for f in [BIN, NEOPIXEL, CODE]:
