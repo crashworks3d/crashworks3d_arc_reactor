@@ -235,6 +235,77 @@ After flashing, unplug and reconnect to a USB-C power source — the animation s
 
 ---
 
+## Troubleshooting
+
+### Hardware
+
+**No LEDs light up after plugging in USB-C**
+- Confirm the USB-C cable is a data+power cable (some cables are charge-only)
+- Try a different USB-C port or charger — the board needs at least 500 mA
+- Check that the ESP32-C3 power LED is on; if not, the board isn't receiving power
+- Verify all three solder joints on the ESP32-C3 (5V, GND, GPIO2)
+
+**Only the center LEDs light up (outer ring is dark)**
+- The daisy-chain connection between the 7-LED center DATA OUT and the 24-LED ring DATA IN may be broken
+- Inspect the solder joint or wire connection between the two components
+- Confirm pixel index constants in `code.py` match your chain order (`CENTER_COUNT = 7`)
+
+**Only a few pixels in the ring light up or the colors look wrong**
+- A broken DATA wire causes all downstream LEDs to go dark or stick to the last received color
+- Check the DATA OUT → DATA IN connection at each link in the chain
+- Try reducing `BRIGHTNESS` to rule out a power issue on longer chains
+
+**One pixel is always bright white or shows garbage color**
+- That LED's internal controller chip may be damaged (common from static or overvoltage)
+- Set that pixel to `(0, 0, 0)` in code as a workaround; the rest of the chain is unaffected
+
+**Board gets warm and LEDs are dim or flicker**
+- USB port may be current-limited (common on older laptop ports)
+- Reduce `BRIGHTNESS` in `code.py` — try `0.2` as a starting point
+- Use a USB-C phone charger instead of a computer port
+
+**Screws won't thread into the printed holes**
+- Print tolerances vary — bore out M3 holes with a **7/64" (2.8 mm) drill bit**
+- For M2 holes in `main_crystal_bottom.stl`, use a **5/64" (2 mm) drill bit**
+
+---
+
+### Software / Flashing
+
+**`python: command not found` on macOS or Linux**
+- macOS ships `python3`, not `python` — use `python3 scripts/flash.py`
+- Verify Python is installed: `python3 --version`
+
+**`No module named esptool`**
+- Install esptool: `pip install esptool` (or `pip3 install esptool`)
+- Confirm the install succeeded: `esptool.py version` or `python3 -m esptool version`
+
+**`A fatal error occurred: Failed to connect to ESP32-C3`**
+- The board was not put into download mode before flashing
+- Hold **BOOT**, tap **RESET**, release **BOOT** — then immediately re-run the script
+- Try a slower baud rate by editing `BAUD = '115200'` in `flash.py`
+- Try a different USB cable (data+power required)
+
+**Wrong port error (e.g., `No such file or directory: /dev/cu.usbmodem14301`)**
+- Find your port: macOS/Linux: `ls /dev/cu.*` or `ls /dev/tty.*`; Windows: Device Manager → Ports
+- Pass the port explicitly: `python3 scripts/flash.py /dev/cu.usbmodem12345`
+
+**Flash succeeds but the board shows no animation after reset**
+- Verify `code.py` and `lib/neopixel.mpy` exist in the project (`src/` and `bundle/`)
+- Check the paths printed by `flash.py` — it validates all three files before proceeding
+- Re-run the full flash sequence to rewrite the filesystem image
+
+**`ImportError: no module named 'neopixel'` in CircuitPython REPL**
+- The `neopixel.mpy` file was not written to the filesystem correctly
+- Re-run `flash.py` — Step 3 rebuilds and Step 4 rewrites the FAT12 image
+
+**Thonny can't connect to the board**
+- CircuitPython's USB Serial/JTAG may need a moment after reset — wait 2–3 seconds and retry
+- In Thonny: Tools → Options → Interpreter → select **CircuitPython (generic)** and the correct port
+- On Linux, add your user to the `dialout` group: `sudo usermod -a -G dialout $USER` (requires logout/login)
+
+---
+
 ## Credits
 
 - **Original 3D model:** [aelkaim on Printables](https://www.printables.com/model/233261-iron-man-arc-reactor) / [Thingiverse mirror](https://www.thingiverse.com/thing:2799642)
